@@ -1,0 +1,146 @@
+
+/*
+ * This file is part of the Osynapsy package.
+ *
+ * (c) Pietro Celeste <p.celeste@osynapsy.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+div.treegrid td {
+    border: 0px !important;
+    padding: 0px !important;
+}
+
+.osy-datagrid-2 table.border-on{
+    border-bottom: 1px solid #f8f8f8;
+}
+.osy-datagrid-2 table.border-on th {
+    text-align: center;
+    border-top: 1px solid #ddd !important;
+    border-bottom: 0px;
+    padding: 3px;
+}
+.osy-datagrid-2 table.border-on td {
+    padding: 5px !important;
+}
+.osy-datagrid-2 input[type="text"] {
+    padding: 1px 2px !important;
+    line-height: 1.1em;
+}
+.osy-datagrid-2 table.border-off th {
+    border-bottom: 1px solid silver !important; 
+    border-right: 0px !important;
+}
+.osy-datagrid-2 table.border-off th,
+.osy-datagrid-2 table.border-off td {
+    border-right: 0px !important;
+}
+
+.osy-datagrid-2 .osy-datagrid-2-toolbar {
+    padding-bottom: 15px;
+    min-height: 40px;
+}
+.osy-datagrid-2 .form-group {
+    margin-left: 20px;
+    display: inline-block;
+}
+.osy-datagrid-2 .osy-datagrid-2-toolbar select {
+    width: auto !important; 
+    margin-right: 10px;
+}
+
+.osy-datagrid-2 table th {
+    background-color: #F7F7F7; 
+    text-align: left;
+    font-weight: bold;     
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.osy-datagrid-2 table th:hover {
+    color: blue;
+}
+
+.osy-datagrid-2 table tr:hover td {
+    background-color: #f8f8f8;
+}
+
+.osy-datagrid-2 table th .orderIcon {
+    font-weight: normal;
+}
+
+.osy-datagrid-2 table th span {
+    font-size: 12px; 
+    line-height: 30px; 
+    font-weight: bold;
+}
+
+.osy-datagrid-2 table td {
+    font-size: 13px;
+    vertical-align: middle;
+}
+
+.osy-datagrid-2 .osy-datagrid-2-foot {
+    padding: 10px 0px;
+}
+
+.osy-datagrid-2 .osy-datagrid-2-foot button {
+  margin: 0px 2px;
+}
+
+div.osy-datagrid-2 span.tree {
+    display: inline-block;
+    margin-right: 3px;
+    background-repeat: no-repeat;
+    line-height: 20px;
+    width: 16px; 
+    padding: 0px;
+}
+
+div.osy-datagrid-2 span.tree-plus-1 {
+    background-image: url(tree.set.png);
+    background-position: 0 6px;
+}
+
+div.osy-datagrid-2 span.tree-plus-2 {
+    background-image: url(tree.set.png);
+    background-position: 0 -23px;
+}
+
+div.osy-datagrid-2 span.tree-plus-3 {
+    background-image: url(tree.set.png);
+    background-position: 0 -48px;
+}
+
+div.osy-datagrid-2 span.tree-null {
+    background-repeat: no-repeat;
+    width: 16px;
+    display: inline-block;
+    margin-right: 3px;
+}
+
+div.osy-datagrid-2 span.minus {
+    background-position-x: -20px;
+}
+
+div.osy-datagrid-2 span.tree-con-1 {
+    background-image: url(tree.set.png);
+    background-position: 0 -73px;
+}
+
+div.osy-datagrid-2 span.tree-con-2 {
+    background-image: url(tree.set.png);
+    background-position: 0 -73px;
+}
+
+div.osy-datagrid-2 span.tree-con-3 {
+    background-image: url(tree.set.png);
+    background-position: 0 -98px;
+}
+
+div.osy-datagrid-2 span.tree-con-4 {
+    background-image: url(tree.set.png);
+    background-position: 0 -124px;
+}

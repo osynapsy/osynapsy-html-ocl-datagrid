@@ -1,0 +1,26 @@
+{
+    "name": "osynapsy/osynapsy-html-ocl-datagrid",
+    "version": "0.1",
+    "homepage": "http://www.osynapsy.net/html-ocl-datagrid",
+    "type": "library",
+    "description": "Osynapsy datagrid component implementation",
+    "keywords": ["Osynapsy", "Datagrid component"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Pietro Celeste",
+            "email": "p.celeste@osynapsy.net",
+            "homepage": "https://github.com/osynapsy/osynapsy-html-ocl-datagrid/wiki"
+        }
+    ],
+    "require": {
+        "php" : ">=7.2.0",
+        "osynapsy/osynapsy-database" : "@stable",
+        "osynapsy/osynapsy-ocl" : "@stable"
+    },
+    "autoload" : {
+        "psr-4": {
+            "Osynapsy\\Ocl\\DataGrid\\": "src/"
+        }
+    }
+}
