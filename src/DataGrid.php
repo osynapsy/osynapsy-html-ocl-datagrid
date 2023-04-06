@@ -14,7 +14,7 @@ namespace Osynapsy\Ocl\DataGrid;
 use Osynapsy\Html\Tag as Tag;
 use Osynapsy\Html\Component as Component;
 use Osynapsy\Ocl\HiddenBox;
-use Osynapsy\Database\Driver\InterfaceDbo;
+use Osynapsy\Database\Driver\DboInterface;
 
 class DataGrid extends Component
 {
@@ -714,7 +714,7 @@ class DataGrid extends Component
         return $this->columnProperties[$n][$propertyKey];
     }
 
-    public function SetSql(InterfaceDbo $db, $sql, $par = [])
+    public function SetSql(DboInterface $db, $sql, $par = [])
     {
         $this->db = $db;
         $this->setParameter('datasource-sql', $sql);
