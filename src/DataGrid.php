@@ -11,12 +11,13 @@
 
 namespace Osynapsy\Ocl\DataGrid;
 
-use Osynapsy\Html\Tag as Tag;
-use Osynapsy\Html\Component as Component;
-use Osynapsy\Ocl\HiddenBox;
+use Osynapsy\Html\Tag;
+use Osynapsy\Html\DOM;
+use Osynapsy\Html\Component\AbstractComponent;
+use Osynapsy\Html\Component\InputHidden;
 use Osynapsy\Database\Driver\DboInterface;
 
-class DataGrid extends Component
+class DataGrid extends AbstractComponent
 {
     private $__col = array();
     private $dataGroups = array(); //array contenente i dati raggruppati
@@ -27,13 +28,14 @@ class DataGrid extends Component
     private $extra;
     protected $request;
     private $functionRow;
+    protected $__par;
 
     public function __construct($name)
     {
-        $this->requireJs('ocl-datagrid.js');
-        $this->requireCss('ocl-datagrid.css');
+        DOM::requireJs('ocl-datagrid.js');
+        DOM::requireCss('ocl-datagrid.css');
         parent::__construct('div', $name);
-        $this->att('class','osy-datagrid-2');
+        $this->attribute('class','osy-datagrid-2');
         $this->setParameter('type', 'datagrid');
         $this->setParameter('row-num', 10);
         $this->setParameter('max_wdt_per', 96);
@@ -66,7 +68,7 @@ class DataGrid extends Component
         return $this->toolbar;
     }
 
-    protected function __build_extra__()
+    public function preBuild()
     {
         //$this->loadColumnObject();
         if ($this->rows) {
@@ -76,27 +78,24 @@ class DataGrid extends Component
             $this->dataLoad();
         }
         if ($par = $this->getParameter('mapgrid-parent')) {
-            $this->att('data-mapgrid', $par);
+            $this->attribute('data-mapgrid', $par);
         }
         if ($this->getParameter('mapgrid-parent-refresh')) {
-            $this->att('class','mapgrid-refreshable',true);
+            $this->attribute('class','mapgrid-refreshable',true);
         }
         if ($par = $this->getParameter('mapgrid-infowindow-format')) {
-            $this->att('data-mapgrid-infowindow-format', $par);
+            $this->attribute('data-mapgrid-infowindow-format', $par);
         }
         //Aggiungo il campo che conterrà i rami aperti dell'albero.
-        $this->add(new HiddenBox($this->id.'_open'))->setClass('open-folders');
+        $this->add(new InputHidden($this->id.'_open'))->addClass('open-folders');
         //Aggiungo il campo che conterrà il ramo selezionato.
-        $this->add(new HiddenBox($this->id, $this->id.'_sel'))->setClass('selected-folder');
-        $this->add(new HiddenBox($this->id.'_order'));
-        $tableContainer = $this->add(new Tag('div'))->att([
-            'id' => $this->id.'-body',
-            'class' => 'osy-datagrid-2-body table-responsive',
-            'data-rows-num' => $this->getParameter('rec_num')
-        ]);
+        $this->add(new InputHidden($this->id, $this->id.'_sel'))->addClass('selected-folder');
+        $this->add(new InputHidden($this->id.'_order'));
+        $tableContainer = $this->add(new Tag('div', $this->id.'-body', 'osy-datagrid-2-body table-responsive'));
+        $tableContainer->attribute('data-rows-num', $this->getParameter('rec_num'));
         $this->buildAddButton($tableContainer);
         $table = $tableContainer->add(new Tag('table'));
-        $table->att([
+        $table->attributes([
             'data-rows-num' => $this->getParameter('rec_num'),
             'data-toggle' => 'table',
             'data-show-columns' => "false",
@@ -105,31 +104,23 @@ class DataGrid extends Component
             'class' => 'display table dataTable no-footer border-'.$this->getParameter('border')
         ]);
         if ($this->getParameter('border') == 'on') {
-            $table->att('class', 'table-bordered', true);
+            $table->addClass('table-bordered');
         }
         if ($this->getParameter('error-in-sql')) {
             $table->add(new Tag('tr'))->add(new Tag('td'))->add($this->getParameter('error-in-sql'));
             return;
         }
         if (is_array($this->getParameter('cols'))) {
-            $this->buildHead(
-                $table->add(new Tag('thead'))
-            );
+            $this->buildHead($table->add(new Tag('thead')));
         }
         if (is_array($this->data) && !empty($this->data)) {
-            $this->buildBody(
-                $table->add(new Tag('tbody')),
-                $this->data,
-                ($this->getParameter('type') == 'datagrid' ? null : 0)
-            );
+            $this->buildBody($table->add(new Tag('tbody')), $this->dataset, ($this->getParameter('type') == 'datagrid' ? null : 0));
         } else {
-            $table->add(new Tag('td'))->att('class','no-data text-center')->att('colspan', $this->getParameter('cols_vis'))->add('Nessun dato presente');
+            $table->add(new Tag('td', null, 'no-data text-center'))->attribute('colspan', $this->getParameter('cols_vis'))->add('Nessun dato presente');
         }
         //Setto il tipo di componente come classe css in modo da poterlo testare via js.
-        $this->att('class', $this->getParameter('type'), true);
-
+        $this->addClass($this->getParameter('type'));
         $this->add('<div class="osy-datagrid-2-foot text-center">'.$this->buildPaging().'</div>');
-
         $this->buildExtra($table);
     }
 
@@ -149,7 +140,7 @@ class DataGrid extends Component
         if (!empty($this->toolbar)) {
             return $this->toolbar;
         }
-        $this->toolbar = $this->add(new Tag('div'))->att([
+        $this->toolbar = $this->add(new Tag('div'))->attribute([
             'id' => $this->id.'_toolbar',
             'class' => 'osy-datagrid-2-toolbar row'
         ]);
@@ -161,10 +152,10 @@ class DataGrid extends Component
         if ($view = $this->getParameter('record-add')){
             $this->getToolbar()
                  ->add(new Tag('button'))
-                 ->att('id',$this->id.'_add')
-                 ->att('type','button')
-                 ->att('class','btn btn-primary cmd-add pull-right')
-                 ->att('data-view', $view)
+                 ->attribute('id',$this->id.'_add')
+                 ->attribute('type','button')
+                 ->attribute('class','btn btn-primary cmd-add pull-right')
+                 ->attribute('data-view', $view)
                  ->add($this->getParameter('record-add-label'));
         }
     }
@@ -230,7 +221,7 @@ class DataGrid extends Component
                         case '_newrow':
                             break 3;
                         case '_tree':
-                            $this->att('class','osy-treegrid',true);
+                            $this->attribute('class','osy-treegrid',true);
                             $this->dataGroup();
                             break;
                         case '_chk'   :
@@ -279,24 +270,24 @@ class DataGrid extends Component
             }
             $this->__par['cols_vis'] += 1;
             $cel = $tr->add(new Tag('th'))
-                      ->att('real_name',$opt['realname'])
-                      ->att('data-ord',$k+1);
+                      ->attribute('real_name',$opt['realname'])
+                      ->attribute('data-ord',$k+1);
             if ($opt['class']) {
-                $cel->att('class',trim($opt['class']),true);
+                $cel->attribute('class',trim($opt['class']),true);
             }
 
-            $cel->att('data-type', empty($col['native_type']) ? '' : $col['native_type'])
+            $cel->attribute('data-type', empty($col['native_type']) ? '' : $col['native_type'])
                 ->add('<span>'.$opt['title'].'</span>');
             if (empty($_REQUEST[$this->id.'_order'])) {
                 continue;
             }
             if (strpos($_REQUEST[$this->id.'_order'],'['.($k+1).']') !== false) {
-                $cel->att('class','osy-datagrid-asc');
+                $cel->attribute('class','osy-datagrid-asc');
                 $cel->add(' <span class="orderIcon glyphicon glyphicon-sort-by-alphabet"></span>');
                 continue;
             }
             if (strpos($_REQUEST[$this->id.'_order'],'['.($k+1).' DESC]') !== false) {
-                $cel->att('class','osy-datagrid-desc');
+                $cel->attribute('class','osy-datagrid-desc');
                 $cel->add(' <span class="orderIcon glyphicon glyphicon-sort-by-alphabet-alt"></span>');
             }
         }
@@ -379,17 +370,17 @@ class DataGrid extends Component
             }
             $t++; //Incremento l'indice generale della colonna
             if (!empty($opt['row']['cell-style-inc'])){
-                $cel->att('style',implode(' ',$opt['row']['cell-style-inc']));
+                $cel->attribute('style',implode(' ',$opt['row']['cell-style-inc']));
             }
             if (!empty($opt['row']['style'])){
-                $orw->att('style',implode(' ',$opt['row']['style']));
+                $orw->attribute('style',implode(' ',$opt['row']['style']));
             }
             //Non stampo la colonna se in $opt['cell']['print'] è contenuto false
             if (!$opt['cell']['print']) {
                 continue;
             }
             if (!empty($opt['cell']['class'])){
-                $cel->att('class',trim(implode(' ',$opt['cell']['class'])));
+                $cel->attribute('class',trim(implode(' ',$opt['cell']['class'])));
             }
             //Formatto tipi di dati particolari
             if (!empty($opt['row']['prefix'])){
@@ -401,17 +392,17 @@ class DataGrid extends Component
             }
             $cel->add(($opt['cell']['value'] !== '0' && empty($opt['cell']['value'])) ? '&nbsp;' : nl2br($opt['cell']['value']));
             if (!empty($opt['cell']['attr']) && is_array($opt['cell']['attr'])) {
-                $cel->att($opt['cell']['attr']);
+                $cel->attribute($opt['cell']['attr']);
             }
             $orw->add($cel);
             $i++;//Incremento l'indice delle colonne visibili
         }
         if (!empty($opt['row']['class'])){
-            $orw->att('class',implode(' ',$opt['row']['class']));
+            $orw->attribute('class',implode(' ',$opt['row']['class']));
         }
         if (!empty($opt['row']['attr'])){
             foreach ($opt['row']['attr'] as $item){
-                $orw->att($item[0], $item[1], true);
+                $orw->attribute($item[0], $item[1], true);
             }
         }
         $grd->add($orw.'');
@@ -584,7 +575,7 @@ class DataGrid extends Component
         try {
             $sql_cnt = "SELECT COUNT(*) FROM (\n{$sql}\n) a ";
             $this->__par['rec_num'] = $this->db->findOne($sql_cnt,$this->getParameter('datasource-sql-par'));
-            $this->att('data-row-num',$this->__par['rec_num']);
+            $this->attribute('data-row-num', $this->__par['rec_num']);
         } catch(\Exception $e) {
             $this->setParameter('error-in-sql','<pre>'.$sql_cnt."\n".$e->getMessage().'</pre>');
             return;
@@ -651,7 +642,7 @@ class DataGrid extends Component
         }
         //Eseguo la query
         try {
-            $this->setData($this->db->findAssoc($sql, $this->getParameter('datasource-sql-par')));
+            $this->setDataset($this->db->findAssoc($sql, $this->getParameter('datasource-sql-par')));
         } catch (\Exception $e) {
             die($sql.$e->getMessage());
         }
@@ -714,7 +705,7 @@ class DataGrid extends Component
         return $this->columnProperties[$n][$propertyKey];
     }
 
-    public function SetSql(DboInterface $db, $sql, $par = [])
+    public function setSql(DboInterface $db, $sql, $par = [])
     {
         $this->db = $db;
         $this->setParameter('datasource-sql', $sql);
@@ -732,5 +723,15 @@ class DataGrid extends Component
     public function setFuncionRow($function)
     {
         $this->functionRow = $function;
+    }
+
+    public function setParameter($key , $value)
+    {
+        $this->__par[$key] = $value;
+    }
+
+    public function getParameter($key)
+    {
+        return $this->__par[$key] ?? null;
     }
 }
