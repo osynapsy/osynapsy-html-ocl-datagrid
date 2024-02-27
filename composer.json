@@ -1,6 +1,6 @@
 {
     "name": "osynapsy/osynapsy-html-ocl-datagrid",
-    "version": "0.2",
+    "version": "0.3",
     "homepage": "http://www.osynapsy.net/html-ocl-datagrid",
     "type": "library",
     "description": "Osynapsy datagrid component implementation",
